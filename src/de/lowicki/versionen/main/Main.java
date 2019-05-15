@@ -8,7 +8,8 @@ import de.lowicki.versionen.manager.Config;
 
 public class Main {
   private Config config;
-  
+  private Versionen version;
+  private GUI gui;
   public static HashMap<String, String> urls = new HashMap();
   public static HashMap<String, String> versionen = new HashMap();
   
@@ -19,8 +20,15 @@ public class Main {
     new GUI();
   }
   
-  public Config getConfig()
-  {
+  public Config getConfig() {
     return config;
   }
+  
+  public Versionen getVersion() {
+	return version;
+  }
+  
+  public GUI getGui() {
+	return gui;
+}
 }
