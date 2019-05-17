@@ -17,7 +17,7 @@ public class Versionen {
     public Versionen() {
         System.out.println(Main.urls);
         Main.urls.forEach((k, v) -> {
-            System.out.println("Das Program: " + k + " Die Url: " + v);
+            //System.out.println("Das Program: " + k + " Die Url: " + v);
             this.chipVersion((String)k, (String)v);
             try {
                 Thread.sleep(100L);

@@ -7,11 +7,11 @@ public class existsFile {
 	  {
 	    File f = new File(path);
 	    if ((f.exists()) && (!f.isDirectory()) && (f.isFile())) {
-	      System.out.println("Es wurde eine Datei gefunden");
+	      System.out.println("[existsFile] Es wurde eine Datei gefunden");
 	    } else {
 	      try {
 	        f.createNewFile();
-	        System.out.println("Es wurde keine Datei gefunden - Datei wird erstellt");
+	        System.out.println("[existsFile] Es wurde keine Datei gefunden - Datei wird erstellt");
 	      } catch (java.io.IOException e) {
 	        e.printStackTrace();
 	      }

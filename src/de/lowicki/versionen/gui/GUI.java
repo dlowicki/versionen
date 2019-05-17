@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import de.lowicki.versionen.link.Versionen;
@@ -28,18 +29,17 @@ public class GUI extends JFrame {
     	frame = new JFrame("Versionen");
     	
     	Font content = new Font("Sans-Serif", Font.CENTER_BASELINE, 20);
-    	Font headline = new Font("Sans-Serif", Font.CENTER_BASELINE, 25);
     	
-        Label label = new Label("Chip.de Versionen");
-        label.setBackground(Color.LIGHT_GRAY);
-        label.setFont(headline);
+    	
+        createHeadline(frame);
+        
         Label lab2 = new Label("");
         TextField machineName = new TextField(200);
         Label lab = new Label("");
         Panel pan = new Panel();
         JScrollPane scrollPane = new JScrollPane();
         
-        pan.add(label);
+        
         pan.add(lab2);
         pan.add(machineName);
         pan.add(lab);
@@ -65,7 +65,6 @@ public class GUI extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
 				Versionen x = new Versionen();
 				System.out.println("Neue Versionen");
 				closeFrame(frame);
@@ -86,6 +85,16 @@ public class GUI extends JFrame {
     
     private void closeFrame(JFrame frame) {
     	frame.dispose();
+    }
+    
+    private void createHeadline(JFrame frame) {
+    	JPanel pan = new JPanel();
+    	Font headline = new Font("Sans-Serif", Font.CENTER_BASELINE, 25);
+    	Label label = new Label("Chip.de Versionen");
+    	label.setBackground(Color.LIGHT_GRAY);
+        label.setFont(headline);
+        pan.add(label);
+        frame.add(pan);
     }
 
 }
