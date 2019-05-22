@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.lowicki.versionen.main.Main;
 
@@ -12,7 +13,7 @@ public class Connect {
 	
 	Connection conn;
 	private String[] versionen = {"CCleaner", "7-Zip", "Adobe Acrobat Reader DC", "Adobe Flash Player", "Notepad++", "IrfanView 4.", "PDF24 8", "PDFCreator", "VLC Media Player"};
-	private ArrayList<String> version = new ArrayList<String>();
+	private HashMap<String, String> version = new HashMap<String, String>();
 	
 	public Connect() {
       try {
@@ -25,10 +26,10 @@ public class Connect {
          
          for(int i = 0; i<versionen.length; i++) {
         	 String ver = getData(conn, versionen[i]);
-        	 version.add(ver);
+        	 version.put(versionen[i], ver);
          }
          System.out.println("ACMP Versionen" + version);
-         Main.acmpVersionen.addAll(version);
+         Main.acmpVersionen = version;
       } catch (Exception e) {
          e.printStackTrace();
       }

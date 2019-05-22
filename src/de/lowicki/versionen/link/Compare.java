@@ -1,30 +1,22 @@
 package de.lowicki.versionen.link;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
+import de.lowicki.versionen.main.Main;
+
 public class Compare {
-	
-	private HashMap<String, String> acmpVersionen = new HashMap<String, String>();
+
 	String name;
 	
-	public Compare(ArrayList<String> acmp, HashMap<String, String> chip) {
-		//, HashMap<String, String> chip
-		getAcmpHash(acmp, chip);
-		//getChipHash(chip);
+	public Compare(HashMap<String, String> acmp, HashMap<String, String> chip) {
+		Main.acmpVersionen = getAcmpHash(acmp, chip);
 	}
 	
-	private void getChipHash(HashMap<String, String> chip) {
-		
-
-		
-	}
-	
-	private HashMap<String, String> getAcmpHash(ArrayList<String> current, HashMap<String, String> chip) {
+	private HashMap<String, String> getAcmpHash(HashMap<String, String> current, HashMap<String, String> chip) {
 		HashMap<String, String> hash = new HashMap<String, String>();
 		
-		for(int i = 0; i < current.size(); i++) {
-			String ver = current.get(i);
+		current.forEach((k,v) -> {
+			String ver = v;
 			String verSpl[] = ver.split(" ");
 			String cv = verSpl[verSpl.length-1];
 			
@@ -36,27 +28,25 @@ public class Compare {
 				}
 				name = name + " " + verSpl[d];
 			}
-			
-			//System.out.println(name + " - " + cv);
-			
-			
-			// Für jedes CHIP Programm
-			chip.forEach((k, v) -> {
-				// Wenn CHIP Programm-Name gleich ACMP-Name entspricht
-				if(k.contentEquals(name)) {
-					System.out.println(v + " - " + cv);
-					
-				} else {
-					//System.out.println(k + " - " + name);
+
+			// Für jedes CHIP Programm; v = Chip.de Versionen und cv = ACMP Versionen
+			chip.forEach((key, value) -> {
+				// Wenn CHIP Programm-Name gleich ACMP-Name entspricht 
+				if(key.contentEquals(name)) {
+					// Wenn Chip.de == ACMP Version werden beide Versionen ausgegeben
+					if(value.equals(cv)) {
+						System.out.println(value + " - " + cv);
+					} else {
+						System.out.println("Neue Version bei " + key + " alte Version: " + cv + " neue Version: " + value);
+					}
 				}
-			});			
+			});
 			
 			hash.put(name, cv);
 			name = "";
-		}
-		
-		
-		
+		});
+
+		System.out.println(hash);
 		return hash;
 	}
 

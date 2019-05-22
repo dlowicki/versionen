@@ -26,7 +26,7 @@ public class Versionen {
                 e.printStackTrace();
             }
         });
-        System.out.println("Gespeichert wurde: " + Main.versionen);
+        System.out.println("Gespeichert wurde: " + Main.chipVersionen);
     }
 
     private void chipVersion(String program, String url) {
@@ -41,11 +41,20 @@ public class Versionen {
             in.close();
             Document doc = Jsoup.parse(this.html);
             String version = doc.select("span.dl-version").text();
-            Main.versionen.put(program, version);
+            
+            version = cutVersion(version);
+            
+            Main.chipVersionen.put(program, version);
         }
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    private String cutVersion(String version) {
+    	String temp = version.replaceAll("[A-Za-z]","");
+    	temp = temp.replaceAll(" ","");
+    	return temp;
     }
 
 }
