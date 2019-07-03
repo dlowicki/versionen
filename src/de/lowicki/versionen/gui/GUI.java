@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -22,8 +23,12 @@ import javax.swing.JTextArea;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import de.lowicki.versionen.database.Connect;
+import de.lowicki.versionen.link.Compare;
 import de.lowicki.versionen.link.Versionen;
 import de.lowicki.versionen.main.Main;
+import de.lowicki.versionen.manager.Load;
+import de.lowicki.versionen.manager.createConfig;
 
 public class GUI extends JFrame {
 	
@@ -36,6 +41,7 @@ public class GUI extends JFrame {
     private JScrollPane pane; 
     private JMenuItem exit;
     private JMenuItem pfad;
+    private JMenuItem config;
     int i = 0;
     private String update = "";
     
@@ -71,11 +77,7 @@ public class GUI extends JFrame {
         lfButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new Versionen();
-				System.out.println("Neue Versionen");
-				//closeFrame(frame);
-				update = getDate();
-				initComponents();
+				updateClient();
 			}
 		}); 
         
@@ -85,33 +87,33 @@ public class GUI extends JFrame {
         area.setFont(content);
         
         
-        
+        if(Main.configStatus == false) {
+        	area.insert("\r\nConfig wurde nicht gefunden! \r\n Menu --> Config erstellen \r\n Programm neu starten!", i);
+        } else {
+            // Für jedes Chip Programm Name == P und Version == v
+            Main.chipVersionen.forEach((p, v) -> {
+            	// Wenn die Version in acmpVersion drinnen ist bedeutet es, dass es keine neue Version gibt
+            	if(Main.acmpVersionen.containsValue(v)) {
+                    area.insert(" \r\n [" + String.valueOf(p) + "] ACMP-Version " + v + " stimmt mit Chip überein", i);
+                    i++;
+            	} else {
+                    aktualisieren.put(String.valueOf(p), v);
+            	}
+            	
+            });
+            area.insert("\r\n-------------------------------------------------------------------", i);            
+            Main.chipVersionen.forEach((k,v)->{
+            	if(aktualisieren.containsValue(v)) {
+            		String acmpVer =  Main.acmpVersionen.get(k);
+            		area.insert("\r\n [" + String.valueOf(k) + "] Versionen stimmen nicht überein ACMP-Version: " + acmpVer + " CHIP-Version: " + v, i);
+            		i++;
+            	}
+            	
+            });
+            
+        }
         
 
-        
-        // Für jedes Chip Programm Name == P und Version == v
-        Main.chipVersionen.forEach((p, v) -> {
-        	
-        	// Wenn die Version in acmpVersion drinnen ist bedeutet es, dass es keine neue Version gibt
-        	if(Main.acmpVersionen.containsValue(v)) {
-                area.insert(" \r\n [" + String.valueOf(p) + "] ACMP-Version " + v + " stimmt mit Chip überein", i);
-                i++;
-        	} else {
-                aktualisieren.put(String.valueOf(p), v);
-        	}
-        	
-        });
-        
-        area.insert("\r\n----------------------------------------------------------", i);
-        
-        Main.chipVersionen.forEach((k,v)->{
-        	if(aktualisieren.containsValue(v)) {
-        		String acmpVer =  Main.acmpVersionen.get(k);
-        		area.insert("\r\n [" + String.valueOf(k) + "] Versionen stimmen nicht überein ACMP-Version: " + acmpVer + " CHIP-Version: " + v, i);
-        		i++;
-        	}
-        	
-        });
         
         
         exit = new JMenuItem("exit"); 
@@ -122,12 +124,21 @@ public class GUI extends JFrame {
 			}
 		});
         
+        config = new JMenuItem("Config erstellen");
+        config.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new createConfig(Paths.get("C:\\ProgramData\\Chip Versionen\\config.ini"));
+			}
+		});
+        
         pfad = new JMenuItem("Config öffnen");
         pfad.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ProcessBuilder pb = new ProcessBuilder("Notepad.exe", Main.path);
+				ProcessBuilder pb = new ProcessBuilder("Notepad.exe", Main.path.toString());
 				try {
 					pb.start();
 				} catch (IOException e1) {
@@ -141,7 +152,9 @@ public class GUI extends JFrame {
         
 
         menu.add(pfad);
+        menu.add(config);
         menu.add(exit); 
+        
         menuBar.add(menu); 
         
         JPanel buttPanel = new JPanel(new FlowLayout()); 
@@ -171,17 +184,21 @@ public class GUI extends JFrame {
 		return formattedDate;
     }
     
-    /*private void editConfigPfad() {
-    	JFrame fenster = new JFrame("Pfad zur Config");
-    	fenster.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    	fenster.setSize(650, 350);
-    	fenster.setResizable(false);
-    	
-    	JTextArea textfield = new JTextArea(5, 5);
-    	
-    	fenster.add(textfield);
-    	fenster.setVisible(true);
-    }*/
+    private void updateClient() {
+		
+		closeFrame(frame);		
+		
+		  GUI x = new GUI();
+		  new Load();
+		  new Connect();
+		  new Versionen();
+		  new Compare(Main.acmpVersionen, Main.chipVersionen);
+		  System.out.println("Neue Versionen");
+		  x.initComponents();
+		  
+		  System.out.println("Daten neu eingespielt");
+		
+    }
  
 
 }

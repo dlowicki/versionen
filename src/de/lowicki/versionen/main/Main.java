@@ -1,5 +1,7 @@
 package de.lowicki.versionen.main;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 import de.lowicki.versionen.database.Connect;
@@ -18,7 +20,8 @@ public class Main {
 	public static HashMap<String, String> chipVersionen = new HashMap<String, String>();
 	public static HashMap<String, String> acmpVersionen = new HashMap<String, String>();
 	public static String connectionURL;
-	public static String path = "C:\\Users\\dlowicki\\Desktop\\David\\Java\\Projekt\\config.ini";
+	public static Path path = Paths.get("C:\\ProgramData\\Chip Versionen\\config.ini");
+	public static Boolean configStatus;
   
   public static void main(String[] args) {
 	  GUI x = new GUI();

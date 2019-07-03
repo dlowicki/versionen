@@ -1,20 +1,23 @@
 package de.lowicki.versionen.manager;
 
 import java.io.File;
+import java.nio.file.Path;
+
+import de.lowicki.versionen.main.Main;
 
 public class existsFile {
-	  public existsFile(String path)
-	  {
-	    File f = new File(path);
-	    if ((f.exists()) && (!f.isDirectory()) && (f.isFile())) {
-	      System.out.println("[existsFile] Es wurde eine Datei gefunden");
+	  public existsFile(Path path) {
+	    File f = new File(path.toString());
+	    
+	    if(f.exists()) {
+		    if ((!f.isDirectory()) && (f.isFile())) {
+		      System.out.println("[existsFile] Es wurde eine Datei gefunden");
+		      Main.configStatus = true;
+		    }
 	    } else {
-	      try {
-	        f.createNewFile();
-	        System.out.println("[existsFile] Es wurde keine Datei gefunden - Datei wird erstellt");
-	      } catch (java.io.IOException e) {
-	        e.printStackTrace();
-	      }
+	    	Main.configStatus = false;
 	    }
 	  }
+	  
+
 }

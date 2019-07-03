@@ -15,7 +15,7 @@ public class Load {
   private void loadConfig() {
 	    try {
 	    	new existsFile(Main.path);
-	    	Wini ini = new Wini(new File(Main.path));
+	    	Wini ini = new Wini(new File(Main.path.toString()));
 	    	Main.connectionURL = ini.get("Connection", "connection");
 	    	Main.urls.putAll((ini.get("url")));
 	    	System.out.println("[Load] Die ConnectionURL und die URLS wurden geladen");
