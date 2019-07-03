@@ -1,131 +1,149 @@
 package de.lowicki.versionen.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Label;
-import java.awt.Panel;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.ScrollPaneLayout;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import de.lowicki.versionen.link.Versionen;
 import de.lowicki.versionen.main.Main;
 
-public class GUI extends JFrame implements ActionListener {
+public class GUI extends JFrame {
 	
 	
+	private static final long serialVersionUID = 1L;
 	JFrame frame;
     private JLabel label; 
     private JButton lfButton; 
     private JTextArea area; 
     private JScrollPane pane; 
     private JMenuItem exit;
-    private int lAF = 1; 
+    private JMenuItem pfad;
+    int i = 0;
+    private String update = "";
+    
+    private HashMap<String, String> aktualisieren = new HashMap<String, String>();
 	
     public GUI() {
     	frame = new JFrame("Versionen");
-    	Font content = new Font("Sans-Serif", Font.CENTER_BASELINE, 20);
     	
-    	createHeadline(frame);
-    	initComponents();
-        
-        Label lab2 = new Label("");
-        TextField machineName = new TextField(200);
-        Label lab = new Label("");
-        Panel pan = new Panel();
-        JScrollPane scrollPane = new JScrollPane();
-        
-        
-        pan.add(lab2);
-        pan.add(machineName);
-        pan.add(lab);
-        
-        pan.setLayout(new GridLayout(14, 10));
-        pan.setBackground(Color.DARK_GRAY);
-        
-        // Für jedes Chip Programm Name == P und Version == v
-        Main.chipVersionen.forEach((p, v) -> {
-        	
-        	// Wenn die Version in acmpVersion drinnen ist bedeutet es, dass es keine neue Version gibt
-        	if(Main.acmpVersionen.containsValue(v)) {
-        		Label row = new Label(String.valueOf(p) + " Version " + v + " stimmt mit Chip überein");
-                row.setBackground(Color.gray);
-                row.setFont(content);
-                row.setBounds(100, 100, 100, 100);
-                pan.add(row);
-        	} else {
-        		String acmpVer = Main.acmpVersionen.get(p);
-        		Label row = new Label("[" + String.valueOf(p) + "] ACMP-Version: " + acmpVer + " CHIP-Version: " + v);
-                row.setBackground(Color.CYAN);
-                row.setFont(content);
-                pan.add(row);
-        	}
-        	
-        });
-        
-        JButton button = new JButton("Aktualisieren");
-        button.setBounds(50, 50, 100, 50);
-        button.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				new Versionen();
-				System.out.println("Neue Versionen");
-				closeFrame(frame);
-				new GUI();
-			}
-		});
-
-        
-        pan.add(button);
-        
-        //frame.getContentPane().add(scrollPane);
-        //frame.add("North", pan);
-        frame.setSize(400, 400);
-        frame.setTitle("CHIP-Versionen");
-        frame.setBackground(Color.blue);
+    	frame.setSize(1000, 600);
+        frame.setTitle("Lade Daten");
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
     }
     
     private void closeFrame(JFrame frame) {
     	frame.dispose();
     }
     
-    private void initComponents() {
+    public void initComponents() {
+    	Font content = new Font("Sans-Serif", Font.CENTER_BASELINE, 15);
         JMenuBar menuBar = new JMenuBar(); 
-        JMenu menu = new JMenu("Datei"); 
-        exit = new JMenuItem("exit"); 
-        exit.addActionListener(this); 
-        menu.add(exit); 
-        menuBar.add(menu); 
-        lfButton = new JButton("L & F"); 
-        lfButton.addActionListener(this); 
+        JMenu menu = new JMenu("Menu");
+        
+        if(!update.isEmpty()) {
+        	frame.setTitle("CHIP-Versionen neu geladen am " + update + " Uhr");
+        } else {
+        	frame.setTitle("CHIP-Versionen geladen am " + getDate() + " Uhr");
+        }  
+
+        lfButton = new JButton("Aktualisieren"); 
+        
+        lfButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new Versionen();
+				System.out.println("Neue Versionen");
+				//closeFrame(frame);
+				update = getDate();
+				initComponents();
+			}
+		}); 
+        
         label = new JLabel(); 
         area = new JTextArea();
-        pane = new JScrollPane(area, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); 
+        area.setLineWrap(false);
+        area.setFont(content);
+        
+        
+        
+        
 
+        
+        // Für jedes Chip Programm Name == P und Version == v
+        Main.chipVersionen.forEach((p, v) -> {
+        	
+        	// Wenn die Version in acmpVersion drinnen ist bedeutet es, dass es keine neue Version gibt
+        	if(Main.acmpVersionen.containsValue(v)) {
+                area.insert(" \r\n [" + String.valueOf(p) + "] ACMP-Version " + v + " stimmt mit Chip überein", i);
+                i++;
+        	} else {
+                aktualisieren.put(String.valueOf(p), v);
+        	}
+        	
+        });
+        
+        area.insert("\r\n----------------------------------------------------------", i);
+        
+        Main.chipVersionen.forEach((k,v)->{
+        	if(aktualisieren.containsValue(v)) {
+        		String acmpVer =  Main.acmpVersionen.get(k);
+        		area.insert("\r\n [" + String.valueOf(k) + "] Versionen stimmen nicht überein ACMP-Version: " + acmpVer + " CHIP-Version: " + v, i);
+        		i++;
+        	}
+        	
+        });
+        
+        
+        exit = new JMenuItem("exit"); 
+        exit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				closeFrame(frame);
+			}
+		});
+        
+        pfad = new JMenuItem("Config öffnen");
+        pfad.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ProcessBuilder pb = new ProcessBuilder("Notepad.exe", Main.path);
+				try {
+					pb.start();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+        
+
+        pane = new JScrollPane(area); 
+        
+
+        menu.add(pfad);
+        menu.add(exit); 
+        menuBar.add(menu); 
+        
         JPanel buttPanel = new JPanel(new FlowLayout()); 
         buttPanel.add(lfButton); 
 
@@ -139,21 +157,31 @@ public class GUI extends JFrame implements ActionListener {
         frame.add(menuBar, BorderLayout.NORTH); 
         frame.add(mainPanel, BorderLayout.CENTER); 
         frame.setLocationRelativeTo(null); 
+        frame.invalidate();
+        frame.validate();
+        frame.repaint();
+        i=0;
     } 
     
-    private void createHeadline(JFrame frame) {
-    	JPanel pan = new JPanel();
-    	Font headline = new Font("Sans-Serif", Font.CENTER_BASELINE, 25);
-    	Label label = new Label("Chip.de Versionen");
-    	label.setBackground(Color.LIGHT_GRAY);
-        label.setFont(headline);
-        pan.add(label);
-        frame.add(pan);
+    private String getDate() {
+	    DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"); 
+	    LocalDateTime myDateObj = LocalDateTime.now(); 
+	    String formattedDate = myDateObj.format(myFormatObj); 
+	    
+		return formattedDate;
     }
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-	} 
+    
+    /*private void editConfigPfad() {
+    	JFrame fenster = new JFrame("Pfad zur Config");
+    	fenster.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    	fenster.setSize(650, 350);
+    	fenster.setResizable(false);
+    	
+    	JTextArea textfield = new JTextArea(5, 5);
+    	
+    	fenster.add(textfield);
+    	fenster.setVisible(true);
+    }*/
+ 
 
 }
