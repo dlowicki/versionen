@@ -6,10 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.ini4j.Wini;
-
-import de.lowicki.versionen.main.Main;
-
 public class CreateConfig {
 	
 	  public CreateConfig(Path path) {
@@ -23,7 +19,8 @@ public class CreateConfig {
 	    	  
 	    	  Path pathToFile = Paths.get("C:\\ProgramData\\Chip Versionen\\");
 	    	  Files.createDirectories(pathToFile);
-	    	 	    	  
+	    	  
+	    	  // Die config.ini Datei erstellen    	  
 	    	  f.createNewFile();
 		        
 		        
@@ -40,14 +37,11 @@ public class CreateConfig {
 		        		"7-Zip=https://www.chip.de/downloads/7-Zip-64-Bit_38851222.html\r\n" + 
 		        		"IrfanView=https://www.chip.de/downloads/IrfanView-64-Bit_81722226.html\r\n" + 
 		        		"Adobe Acrobat Reader DC=https://www.chip.de/downloads/Adobe-Acrobat-Reader-DC_12998358.html\r\n" + 
-		        		"Adobe Flash Player=https://www.chip.de/downloads/Adobe-Flash-Player_13003561.html\r\n" + 
-		        		"\r\n" + 
-		        		"[versionen]\r\n" + 
-		        		"CCleaner=5.56\r\n" + 
-		        		"Notepad++=7.6.6");
+		        		"Adobe Flash Player=https://www.chip.de/downloads/Adobe-Flash-Player_13003561.html");
 		        w.close();
+		        
 		        System.out.println("[existsFile] Es wurde keine Datei gefunden - Datei wird erstellt");
-		    	new Load();		    	
+		    	new Load();    	
 		      } catch (java.io.IOException e) {
 		        e.printStackTrace();
 		      }

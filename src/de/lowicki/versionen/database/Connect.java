@@ -35,10 +35,7 @@ public class Connect {
       }
    }
 	
-
-    
-    
-    private String getData(Connection conn, String program) {
+	private String getData(Connection conn, String program) {
     	try {
 	        Statement statement = conn.createStatement();
 	        String queryString = "SELECT TOP(1) SWName FROM SYS_SW_CLIENTCOMMANDS WHERE SWName LIKE '" + program + "%' ORDER BY SWName DESC";

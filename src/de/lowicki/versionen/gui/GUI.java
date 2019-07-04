@@ -64,7 +64,17 @@ public class GUI extends JFrame {
     public void initComponents() {
     	Font content = new Font("Sans-Serif", Font.CENTER_BASELINE, 15);
         JMenuBar menuBar = new JMenuBar(); 
-        JMenu menu = new JMenu("Menu");
+        JMenu menu = new JMenu("Menu"); 
+        JMenu menuConfig = new JMenu("Config");
+        label = new JLabel(); 
+        area = new JTextArea();
+        lfButton = new JButton("Aktualisieren"); 
+        pfad = new JMenuItem("Config öffnen");
+        config = new JMenuItem("Config erstellen");
+        exit = new JMenuItem("Beenden");
+        JPanel buttPanel = new JPanel(new FlowLayout());
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        
         
         if(!update.isEmpty()) {
         	frame.setTitle("CHIP-Versionen neu geladen am " + update + " Uhr");
@@ -72,7 +82,7 @@ public class GUI extends JFrame {
         	frame.setTitle("CHIP-Versionen geladen am " + getDate() + " Uhr");
         }  
 
-        lfButton = new JButton("Aktualisieren"); 
+        
         
         lfButton.addActionListener(new ActionListener() {
 			@Override
@@ -81,14 +91,11 @@ public class GUI extends JFrame {
 			}
 		}); 
         
-        label = new JLabel(); 
-        area = new JTextArea();
         area.setLineWrap(false);
         area.setFont(content);
         
-        
         if(Main.configStatus == false) {
-        	area.insert("\r\nConfig wurde nicht gefunden! \r\nMenu --> Config erstellen und aktualisieren", i);
+        	area.insert("\r\nConfig wurde nicht gefunden! \r\nConfig --> Config erstellen und aktualisieren", i);
         } else {
             // Für jedes Chip Programm Name == P und Version == v
             Main.chipVersionen.forEach((p, v) -> {
@@ -116,7 +123,7 @@ public class GUI extends JFrame {
 
         
         
-        exit = new JMenuItem("exit"); 
+        
         exit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -124,7 +131,7 @@ public class GUI extends JFrame {
 			}
 		});
         
-        config = new JMenuItem("Config erstellen");
+        
         config.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -132,7 +139,7 @@ public class GUI extends JFrame {
 			}
 		});
         
-        pfad = new JMenuItem("Config öffnen");
+        
         pfad.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -148,17 +155,17 @@ public class GUI extends JFrame {
 
         pane = new JScrollPane(area); 
         
-
-        menu.add(pfad);
-        menu.add(config);
+        menuConfig.add(pfad);
+        menuConfig.add(config);
         menu.add(exit); 
         
-        menuBar.add(menu); 
+        menuBar.add(menu);
+        menuBar.add(menuConfig); 
         
-        JPanel buttPanel = new JPanel(new FlowLayout()); 
+         
         buttPanel.add(lfButton); 
 
-        JPanel mainPanel = new JPanel(new BorderLayout()); 
+         
         mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30)); 
 
         mainPanel.add(label, BorderLayout.NORTH); 
@@ -171,6 +178,7 @@ public class GUI extends JFrame {
         frame.invalidate();
         frame.validate();
         frame.repaint();
+        // Die Zeilen zurücksetzen
         i=0;
     } 
     

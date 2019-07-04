@@ -8,8 +8,8 @@ import java.util.Base64;
 
 public class AESSync {
 	
-    private static final String ALGO = "AES";
-    private static final byte[] keyValue = new byte[]{'T', 'h', 'e', 'B', 'e', 's', 't', 'S', 'e', 'c', 'r', 'e', 't', 'K', 'e', 'y'};
+    private final String ALGO = "AES";
+    private final byte[] keyValue = new byte[]{'T', 'h', 'e', 'B', 'e', 's', 't', 'S', 'e', 'c', 'r', 'e', 't', 'K', 'e', 'y'};
 
     public String encrypt(String data) throws Exception {
         Key key = generateKey();
@@ -29,7 +29,7 @@ public class AESSync {
         return new String(decValue);
     }
 
-    private static Key generateKey() throws Exception {
+    private Key generateKey() throws Exception {
         return new SecretKeySpec(keyValue, ALGO);
     }
     
