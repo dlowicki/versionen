@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.lowicki.versionen.main.Main;
@@ -21,14 +20,15 @@ public class Connect {
          String connectionURL = Main.connectionURL;
          conn = DriverManager.getConnection(connectionURL);
          if(conn != null){
-        	 System.out.println("Connected");
+        	 System.out.println("[Connect] Verbindung zur Datenbank erfolgreich aufgebaut!");
          }
          
          for(int i = 0; i<versionen.length; i++) {
         	 String ver = getData(conn, versionen[i]);
         	 version.put(versionen[i], ver);
          }
-         System.out.println("ACMP Versionen" + version);
+         
+         //System.out.println("ACMP Versionen" + version);
          Main.acmpVersionen = version;
       } catch (Exception e) {
          e.printStackTrace();

@@ -32,21 +32,21 @@ public class Compare {
 			// Für jedes CHIP Programm; v = Chip.de Versionen und cv = ACMP Versionen
 			chip.forEach((key, value) -> {
 				// Wenn CHIP Programm-Name gleich ACMP-Name entspricht 
-				if(key.contentEquals(name)) {
+				/*if(key.contentEquals(name)) {
 					// Wenn Chip.de == ACMP Version werden beide Versionen ausgegeben
 					if(value.equals(cv)) {
 						System.out.println(value + " - " + cv);
 					} else {
 						System.out.println("Neue Version bei " + key + " alte Version: " + cv + " neue Version: " + value);
 					}
-				}
+				}*/
 			});
 			
 			hash.put(name, cv);
 			name = "";
 		});
 
-		System.out.println(hash);
+		//System.out.println(hash);
 		return hash;
 	}
 

@@ -5,8 +5,8 @@ import java.nio.file.Path;
 
 import de.lowicki.versionen.main.Main;
 
-public class existsFile {
-	  public existsFile(Path path) {
+public class ExistsFile {
+	  public ExistsFile(Path path) {
 	    File f = new File(path.toString());
 	    
 	    if(f.exists()) {

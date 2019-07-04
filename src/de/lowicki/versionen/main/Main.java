@@ -30,7 +30,6 @@ public class Main {
 	  new Versionen();
 	  new Compare(acmpVersionen, chipVersionen);
 	  x.initComponents();
-	  
   }
   
   public Load getConfig() {

@@ -28,7 +28,7 @@ import de.lowicki.versionen.link.Compare;
 import de.lowicki.versionen.link.Versionen;
 import de.lowicki.versionen.main.Main;
 import de.lowicki.versionen.manager.Load;
-import de.lowicki.versionen.manager.createConfig;
+import de.lowicki.versionen.manager.CreateConfig;
 
 public class GUI extends JFrame {
 	
@@ -88,7 +88,7 @@ public class GUI extends JFrame {
         
         
         if(Main.configStatus == false) {
-        	area.insert("\r\nConfig wurde nicht gefunden! \r\n Menu --> Config erstellen \r\n Programm neu starten!", i);
+        	area.insert("\r\nConfig wurde nicht gefunden! \r\nMenu --> Config erstellen und aktualisieren", i);
         } else {
             // Für jedes Chip Programm Name == P und Version == v
             Main.chipVersionen.forEach((p, v) -> {
@@ -126,23 +126,21 @@ public class GUI extends JFrame {
         
         config = new JMenuItem("Config erstellen");
         config.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new createConfig(Paths.get("C:\\ProgramData\\Chip Versionen\\config.ini"));
+				new CreateConfig(Paths.get("C:\\ProgramData\\Chip Versionen\\config.ini"));
 			}
 		});
         
         pfad = new JMenuItem("Config öffnen");
         pfad.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ProcessBuilder pb = new ProcessBuilder("Notepad.exe", Main.path.toString());
 				try {
 					pb.start();
-				} catch (IOException e1) {
-					e1.printStackTrace();
+				} catch (IOException ex) {
+					ex.printStackTrace();
 				}
 			}
 		});
@@ -185,20 +183,17 @@ public class GUI extends JFrame {
     }
     
     private void updateClient() {
-		
 		closeFrame(frame);		
-		
-		  GUI x = new GUI();
-		  new Load();
-		  new Connect();
-		  new Versionen();
-		  new Compare(Main.acmpVersionen, Main.chipVersionen);
-		  System.out.println("Neue Versionen");
-		  x.initComponents();
+		GUI x = new GUI();
+		new Load();
+		new Connect();
+		new Versionen();
+		new Compare(Main.acmpVersionen, Main.chipVersionen);
+		System.out.println("[GUI] Neue Versionen werden geladen");
+		x.initComponents();
 		  
-		  System.out.println("Daten neu eingespielt");
-		
-    }
+		System.out.println("[GUI] Daten wurden soeben neu eingespielt");
+	}
  
 
 }
