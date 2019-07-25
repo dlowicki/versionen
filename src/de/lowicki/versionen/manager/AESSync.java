@@ -25,7 +25,7 @@ public class AESSync {
         c.init(Cipher.DECRYPT_MODE, key);
         byte[] decordedValue = Base64.getDecoder().decode(encryptedData);
         byte[] decValue = c.doFinal(decordedValue);
-        System.out.println("[AESSync] Verschlüsselung aktiviert");
+        System.out.println("[AESSync] Entschlüssel " + encryptedData);
         return new String(decValue);
     }
 

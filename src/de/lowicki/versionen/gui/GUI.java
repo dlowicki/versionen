@@ -23,7 +23,7 @@ import javax.swing.JTextArea;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import de.lowicki.versionen.database.Connect;
+import de.lowicki.versionen.database.Connect_acmp;
 import de.lowicki.versionen.link.Compare;
 import de.lowicki.versionen.link.Versionen;
 import de.lowicki.versionen.main.Main;
@@ -42,6 +42,8 @@ public class GUI extends JFrame {
     private JMenuItem exit;
     private JMenuItem pfad;
     private JMenuItem config;
+    private JPanel auswahl;
+    private JPanel main;
     int i = 0;
     private String update = "";
     
@@ -50,18 +52,60 @@ public class GUI extends JFrame {
     public GUI() {
     	frame = new JFrame("Versionen");
     	
-    	frame.setSize(1000, 600);
+    	frame.setSize(500, 200);
         frame.setTitle("Lade Daten");
+        
+        loadAuswahl(frame);
+        
+        frame.setLocationRelativeTo(null); 
+        frame.invalidate();
+        frame.validate();
+        frame.repaint();
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
     
     private void closeFrame(JFrame frame) {
     	frame.dispose();
     }
     
+    private void loadAuswahl(JFrame fr) {
+        JPanel buttPanel = new JPanel(new FlowLayout());
+        auswahl = new JPanel(new BorderLayout());
+        
+        JButton dbButton = new JButton("Datenbank");
+        JButton cfButton = new JButton("Config"); 
+        
+        buttPanel.add(dbButton);
+        buttPanel.add(cfButton); 
+        
+        dbButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+        
+        cfButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(Main.configReady == true) {
+					initComponents();
+				}
+			}
+		});
+
+        
+        auswahl.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30)); 
+        auswahl.add(buttPanel, BorderLayout.SOUTH);
+        fr.add(auswahl);
+    }
+    
     public void initComponents() {
+    	frame.remove(auswahl);
+    	frame.setSize(1000,600);
     	Font content = new Font("Sans-Serif", Font.CENTER_BASELINE, 15);
         JMenuBar menuBar = new JMenuBar(); 
         JMenu menu = new JMenu("Menu"); 
@@ -73,7 +117,7 @@ public class GUI extends JFrame {
         config = new JMenuItem("Config erstellen");
         exit = new JMenuItem("Beenden");
         JPanel buttPanel = new JPanel(new FlowLayout());
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        main = new JPanel(new BorderLayout());
         
         
         if(!update.isEmpty()) {
@@ -166,14 +210,15 @@ public class GUI extends JFrame {
         buttPanel.add(lfButton); 
 
          
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30)); 
+        main.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30)); 
 
-        mainPanel.add(label, BorderLayout.NORTH); 
-        mainPanel.add(pane, BorderLayout.CENTER); 
-        mainPanel.add(buttPanel, BorderLayout.SOUTH); 
-
+        main.add(label, BorderLayout.NORTH); 
+        main.add(pane, BorderLayout.CENTER); 
+        main.add(buttPanel, BorderLayout.SOUTH); 
+        
+        
         frame.add(menuBar, BorderLayout.NORTH); 
-        frame.add(mainPanel, BorderLayout.CENTER); 
+        frame.add(main, BorderLayout.CENTER);
         frame.setLocationRelativeTo(null); 
         frame.invalidate();
         frame.validate();
@@ -190,17 +235,19 @@ public class GUI extends JFrame {
 		return formattedDate;
     }
     
+
+    
     private void updateClient() {
 		closeFrame(frame);		
 		GUI x = new GUI();
 		new Load();
-		new Connect();
+		new Connect_acmp();
 		new Versionen();
 		new Compare(Main.acmpVersionen, Main.chipVersionen);
 		System.out.println("[GUI] Neue Versionen werden geladen");
 		x.initComponents();
 		  
-		System.out.println("[GUI] Daten wurden soeben neu eingespielt");
+		System.out.println("[GUI] Daten wurden aktualisiert");
 	}
  
 

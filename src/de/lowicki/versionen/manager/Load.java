@@ -16,11 +16,17 @@ public class Load {
 	    	new ExistsFile(Main.path);
 	    	Wini ini = new Wini(new File(Main.path.toString()));
 	    	
-	    	String dec = decrypt(ini.get("Connection", "connection"));
+	    	String dec = decrypt(ini.get("ACMP", "connection"));
 	    	if(dec != null) {
 		    	Main.connectionURL = dec;
+		    	Main.mysql.add(decrypt(ini.get("MYSQL", "host")));
+		    	Main.mysql.add(ini.get("MYSQL", "port"));
+		    	Main.mysql.add(decrypt(ini.get("MYSQL", "database")));
+		    	Main.mysql.add(decrypt(ini.get("MYSQL", "user")));
+		    	Main.mysql.add(decrypt(ini.get("MYSQL", "pass")));
 		    	Main.urls.putAll((ini.get("url")));
 		    	System.out.println("[Load] Die ConnectionURL und die URLS wurden geladen");
+		    	return;
 	    	}
 	    } catch (Exception e) {
 	      e.printStackTrace();

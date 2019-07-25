@@ -8,13 +8,13 @@ import java.util.HashMap;
 
 import de.lowicki.versionen.main.Main;
 
-public class Connect {
+public class Connect_acmp {
 	
 	Connection conn;
 	private String[] versionen = {"CCleaner", "7-Zip", "Adobe Acrobat Reader DC", "Adobe Flash Player", "Notepad++", "IrfanView 4.", "PDF24 8", "PDFCreator", "VLC Media Player"};
 	private HashMap<String, String> version = new HashMap<String, String>();
 	
-	public Connect() {
+	public Connect_acmp() {
       try {
          Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
          String connectionURL = Main.connectionURL;

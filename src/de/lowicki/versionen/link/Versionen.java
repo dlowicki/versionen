@@ -27,6 +27,7 @@ public class Versionen {
             }
         });
         System.out.println("Gespeichert wurde: " + Main.chipVersionen);
+        Main.configReady = true;
     }
 
     private void chipVersion(String program, String url) {
