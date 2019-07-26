@@ -23,9 +23,11 @@ public class ChipForwardUrl {
 	public ChipForwardUrl() {
 		chipURL("7-Zip", Main.downloads.get("7-Zip"));
 		chipURL("PDF24", Main.downloads.get("PDF24"));
+		chipURL("Notepad++", Main.downloads.get("Notepad++"));
 		
 		access.add(chipReceiveDataUrl(chipReceiveAccessURL(forward.get(0))));
 		access.add(chipReceiveDataUrl(chipReceiveAccessURL(forward.get(1))));
+		access.add(chipReceiveDataUrl(chipReceiveAccessURL(forward.get(2))));
 		writeToDownloads();
 	}
 	
@@ -132,7 +134,6 @@ public class ChipForwardUrl {
             		continue;
             	
             	return href;
-            	
             }
         } catch (IOException e) {
             e.printStackTrace();
