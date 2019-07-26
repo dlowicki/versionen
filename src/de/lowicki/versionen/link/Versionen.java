@@ -8,7 +8,10 @@ import java.net.URL;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+<<<<<<< HEAD
 import de.lowicki.versionen.gui.StartGUI;
+=======
+>>>>>>> refs/remotes/origin/master
 import de.lowicki.versionen.main.Main;
 
 public class Versionen {
