@@ -5,9 +5,10 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -28,7 +29,8 @@ import de.lowicki.versionen.link.Compare;
 import de.lowicki.versionen.link.Versionen;
 import de.lowicki.versionen.main.Main;
 import de.lowicki.versionen.manager.Load;
-import de.lowicki.versionen.manager.CreateConfig;
+import de.lowicki.versionen.manager.CreateFile;
+import de.lowicki.versionen.manager.ExistsFile;
 
 public class GUI extends JFrame {
 	
@@ -40,15 +42,17 @@ public class GUI extends JFrame {
     private JTextArea area; 
     private JScrollPane pane; 
     private JMenuItem exit;
-    private JMenuItem pfad;
-    private JMenuItem config;
+    
+    private JMenuItem pathConfig;
+    private JMenuItem openConfig;
+    private JMenuItem pathDownloads;
+    private JMenuItem openDownloads;
+    
     private JPanel auswahl;
     private JPanel main;
     int i = 0;
     private String update = "";
-    
-    private HashMap<String, String> aktualisieren = new HashMap<String, String>();
-	
+    	
     public GUI() {
     	frame = new JFrame("Versionen");
     	
@@ -110,11 +114,16 @@ public class GUI extends JFrame {
         JMenuBar menuBar = new JMenuBar(); 
         JMenu menu = new JMenu("Menu"); 
         JMenu menuConfig = new JMenu("Config");
+        JMenu menuDownloads = new JMenu("Downloads");
         label = new JLabel(); 
         area = new JTextArea();
         lfButton = new JButton("Aktualisieren"); 
-        pfad = new JMenuItem("Config öffnen");
-        config = new JMenuItem("Config erstellen");
+        
+        pathConfig = new JMenuItem("Config öffnen");
+        openConfig = new JMenuItem("Config erstellen");
+        pathDownloads = new JMenuItem("Downloads erstellen");
+        openDownloads = new JMenuItem("Downloads öffnen");
+        
         exit = new JMenuItem("Beenden");
         JPanel buttPanel = new JPanel(new FlowLayout());
         main = new JPanel(new BorderLayout());
@@ -148,13 +157,13 @@ public class GUI extends JFrame {
                     area.insert(" \r\n [" + String.valueOf(p) + "] ACMP-Version " + v + " stimmt mit Chip überein", i);
                     i++;
             	} else {
-                    aktualisieren.put(String.valueOf(p), v);
+                    Main.aktualisieren.put(String.valueOf(p), v);
             	}
             	
             });
             area.insert("\r\n-------------------------------------------------------------------", i);            
             Main.chipVersionen.forEach((k,v)->{
-            	if(aktualisieren.containsValue(v)) {
+            	if(Main.aktualisieren.containsValue(v)) {
             		String acmpVer =  Main.acmpVersionen.get(k);
             		area.insert("\r\n [" + String.valueOf(k) + "] Versionen stimmen nicht überein ACMP-Version: " + acmpVer + " CHIP-Version: " + v, i);
             		i++;
@@ -176,18 +185,37 @@ public class GUI extends JFrame {
 		});
         
         
-        config.addActionListener(new ActionListener() {
+        pathConfig.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new CreateConfig(Paths.get("C:\\ProgramData\\Chip Versionen\\config.ini"));
+				new CreateFile(Paths.get("C:\\ProgramData\\Chip Versionen\\config.ini"), "Config");
+			}
+		});
+        
+        pathDownloads.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new CreateFile(Paths.get("C:\\ProgramData\\Chip Versionen\\downloads.ini"), "Downloads");
 			}
 		});
         
         
-        pfad.addActionListener(new ActionListener() {
+        openConfig.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ProcessBuilder pb = new ProcessBuilder("Notepad.exe", Main.path.toString());
+				ProcessBuilder pb = new ProcessBuilder("Notepad.exe", Main.pathConfig.toString());
+				try {
+					pb.start();
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+        
+        openDownloads.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ProcessBuilder pb = new ProcessBuilder("Notepad.exe", Main.pathDownloads.toString());
 				try {
 					pb.start();
 				} catch (IOException ex) {
@@ -199,13 +227,20 @@ public class GUI extends JFrame {
 
         pane = new JScrollPane(area); 
         
-        menuConfig.add(pfad);
-        menuConfig.add(config);
+        menuConfig.add(pathConfig);
+        menuConfig.add(openConfig);
+        
+        
+        if(checkFileExists(Main.pathDownloads))
+        	menuDownloads.add(openDownloads);
+        menuDownloads.add(pathDownloads);
+        
+        
         menu.add(exit); 
         
         menuBar.add(menu);
         menuBar.add(menuConfig); 
-        
+        menuBar.add(menuDownloads); 
          
         buttPanel.add(lfButton); 
 
@@ -249,6 +284,16 @@ public class GUI extends JFrame {
 		  
 		System.out.println("[GUI] Daten wurden aktualisiert");
 	}
+    
+	  private Boolean checkFileExists(Path path) {
+		    File f = new File(path.toString());
+		    if(f.exists()) {
+			    if ((!f.isDirectory()) && (f.isFile())) {
+			    	return true;
+			    }
+		    }
+		  return false;
+	  }
  
 
 }

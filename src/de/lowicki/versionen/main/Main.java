@@ -7,6 +7,8 @@ import java.util.HashMap;
 
 import de.lowicki.versionen.database.Connect_acmp;
 import de.lowicki.versionen.database.Connect_mysql;
+import de.lowicki.versionen.download.ChipForwardUrl;
+import de.lowicki.versionen.download.Download;
 import de.lowicki.versionen.gui.GUI;
 import de.lowicki.versionen.link.Compare;
 import de.lowicki.versionen.link.Versionen;
@@ -20,21 +22,28 @@ public class Main {
 	private Versionen version;
 	private GUI gui;
 	public static HashMap<String, String> urls = new HashMap<String, String>();
+	public static HashMap<String, String> downloads = new HashMap<String, String>();
+	public static HashMap<String, String> aktualisieren = new HashMap<String, String>();
 	public static HashMap<String, String> chipVersionen = new HashMap<String, String>();
 	public static HashMap<String, String> acmpVersionen = new HashMap<String, String>();
 	public static ArrayList<String> mysql = new ArrayList<String>();
 	public static String connectionURL;
-	public static Path path = Paths.get("C:\\ProgramData\\Chip Versionen\\config.ini");
+	public static Path pathConfig = Paths.get("C:\\ProgramData\\Chip Versionen\\config.ini");
+	public static Path pathDownloads = Paths.get("C:\\ProgramData\\Chip Versionen\\downloads.ini");
 	public static Boolean configStatus;
 	public static Boolean configReady = false;
   
   public static void main(String[] args) {
 	  GUI x = new GUI();
 	  new Load();
-	  new Connect_acmp();
-	  new Versionen();
-	  new Compare(acmpVersionen, chipVersionen);
 	  
+	  new Connect_acmp();
+	  new Versionen(); // Aktualisiert die Daten von Chip.de und speichert die Daten
+	  new Compare(acmpVersionen, chipVersionen); // Vergleicht die Daten von ACMP und Chip.de
+	  new ChipForwardUrl();
+	  
+	  //Download d = new Download();
+	  //d.downloadFile();
 	  
   }
   

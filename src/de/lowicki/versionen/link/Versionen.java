@@ -11,7 +11,6 @@ import org.jsoup.nodes.Document;
 import de.lowicki.versionen.main.Main;
 
 public class Versionen {
-    Main instance = new Main();
     private String html = "";
 
     public Versionen() {

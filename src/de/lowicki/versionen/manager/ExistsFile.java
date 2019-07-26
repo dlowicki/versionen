@@ -11,11 +11,14 @@ public class ExistsFile {
 	    
 	    if(f.exists()) {
 		    if ((!f.isDirectory()) && (f.isFile())) {
-		    	Main.configStatus = true;
-		    	System.out.println("[existsFile] Es wurde eine Datei gefunden");
+		    	if(path == Main.pathConfig)
+		    		Main.configStatus = true;
+		    	
+		    	System.out.println("[existsFile] " + path + " existiert!");
 		    }
 	    } else {
-	    	Main.configStatus = false;
+	    	if(path == Main.pathConfig)
+	    		Main.configStatus = false;
 	    }
 	  }
 }

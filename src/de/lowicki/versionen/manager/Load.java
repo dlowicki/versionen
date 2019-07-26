@@ -1,11 +1,18 @@
 package de.lowicki.versionen.manager;
 
 import java.io.File;
+
+import org.ini4j.Profile.Section;
 import org.ini4j.Wini;
 
 import de.lowicki.versionen.main.Main;
 
 public class Load {
+	
+	/*
+	 * Hier werden die Daten aus der config.ini Datei in verschiedene Arrays
+	 * und HashMaps gepackt
+	 */
   
   public Load() {
 	  loadConfig();
@@ -13,11 +20,13 @@ public class Load {
   
   private void loadConfig() {
 	    try {
-	    	new ExistsFile(Main.path);
-	    	Wini ini = new Wini(new File(Main.path.toString()));
+	    	new ExistsFile(Main.pathConfig);
+	    	new ExistsFile(Main.pathDownloads);
+	    	Wini ini = new Wini(new File(Main.pathConfig.toString()));
 	    	
 	    	String dec = decrypt(ini.get("ACMP", "connection"));
-	    	if(dec != null) {
+	    	Section mysqlData = ini.get("MYSQL");
+	    	if(dec != null && mysqlData != null) {
 		    	Main.connectionURL = dec;
 		    	Main.mysql.add(decrypt(ini.get("MYSQL", "host")));
 		    	Main.mysql.add(ini.get("MYSQL", "port"));
@@ -25,7 +34,8 @@ public class Load {
 		    	Main.mysql.add(decrypt(ini.get("MYSQL", "user")));
 		    	Main.mysql.add(decrypt(ini.get("MYSQL", "pass")));
 		    	Main.urls.putAll((ini.get("url")));
-		    	System.out.println("[Load] Die ConnectionURL und die URLS wurden geladen");
+		    	Main.downloads.putAll((ini.get("download")));
+		    	System.out.println("[Load] Die ConnectionURL, die URLS und die Downloads wurden geladen");
 		    	return;
 	    	}
 	    } catch (Exception e) {
@@ -42,4 +52,5 @@ public class Load {
 		}
 	return null;
   }
+  
 }
