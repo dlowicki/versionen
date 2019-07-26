@@ -27,6 +27,7 @@ public class Main {
 	public static Path pathDownloads = Paths.get("C:\\ProgramData\\Chip Versionen\\downloads.ini");
 	public static Boolean configStatus;
 	public static Boolean configReady = false;
+	//test
   
   public static void main(String[] args) {
 	  StartGUI x = new StartGUI();
