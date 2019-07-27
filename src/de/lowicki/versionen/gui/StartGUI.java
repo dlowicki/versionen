@@ -14,6 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import de.lowicki.versionen.main.Main;
+import de.lowicki.versionen.main.State;
 
 public class StartGUI {
 	
@@ -24,6 +25,12 @@ public class StartGUI {
     private JPanel auswahl;
 	
 	public void StartGUI() {
+		
+		if(!(Main.getState() == State.AUSWAHL)) {
+			Main.setState(State.AUSWAHL);
+			System.out.println("State zu AUSWAHL geändert");
+		}
+		
     	frame = new JFrame("Versionen");
     	
     	frame.setSize(500, 200);
@@ -55,6 +62,8 @@ public class StartGUI {
 				if(Main.configReady == true) {
 					GUI x = new GUI();
 					x.initComponents();
+					new CloseFrame(frame);
+					Main.setState(State.MAIN);
 				}
 			}
 		});
@@ -84,5 +93,4 @@ public class StartGUI {
 		area.update(area.getGraphics());
 		
 	}
-
 }
