@@ -72,6 +72,10 @@ public class Connect_mysql {
 		return false;
 	}
 	
+	private void createTable() {
+		this.update("CREATE TABLE IF NOT EXISTS programme(id int NOT NULL AUTO_INCREMENT, name varchar(50) UNIQUE, version varchar(30), link varchar(120), download varchar(250))");
+	}
+	
 	public void registerProgram(String name, String email, String pw) {
 		if(getProgramDataByName(name) == false) {
 			update("INSERT INTO programme (name, link, img) VALUES ('" + name + "','" + email + "', '" + pw + "')");

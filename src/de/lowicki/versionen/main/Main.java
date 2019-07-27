@@ -2,6 +2,8 @@ package de.lowicki.versionen.main;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,10 +25,14 @@ public class Main {
 	public static HashMap<String, String> acmpVersionen = new HashMap<String, String>();
 	public static ArrayList<String> mysql = new ArrayList<String>();
 	public static String connectionURL;
+	
 	public static Path pathConfig = Paths.get("C:\\ProgramData\\Chip Versionen\\config.ini");
 	public static Path pathDownloads = Paths.get("C:\\ProgramData\\Chip Versionen\\downloads.ini");
+	public static Path pathDir = Paths.get(System.getProperty("user.home") + "\\Desktop\\downloads\\");
+	
 	public static Boolean configStatus;
 	public static Boolean configReady = false;
+	public static Boolean downloadStop = false;
   
   public static void main(String[] args) {
 	  StartGUI x = new StartGUI();
@@ -42,6 +48,13 @@ public class Main {
 	  if(Main.getState() == State.AUSWAHL)
 		  x.add("Download Seiten von Chip geladen");
 	  
+  }
+  
+  public static String getDate() {
+	    DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"); 
+	    LocalDateTime myDateObj = LocalDateTime.now(); 
+	    String formattedDate = myDateObj.format(myFormatObj); 
+		return formattedDate;
   }
   
   public static State getState() {

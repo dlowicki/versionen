@@ -1,6 +1,7 @@
 package de.lowicki.versionen.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -21,17 +22,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import de.lowicki.versionen.database.Connect_acmp;
-import de.lowicki.versionen.download.Download;
-import de.lowicki.versionen.link.Compare;
 import de.lowicki.versionen.link.Versionen;
 import de.lowicki.versionen.main.Main;
 import de.lowicki.versionen.manager.Load;
 import de.lowicki.versionen.manager.CreateFile;
-import de.lowicki.versionen.manager.ExistsFile;
 
 public class GUI extends JFrame {
 	
@@ -48,6 +42,7 @@ public class GUI extends JFrame {
     private JMenuItem openConfig;
     private JMenuItem pathDownloads;
     private JMenuItem openDownloads;
+    private JMenuItem openDir;
     private JMenuItem startDownloads;
     
     private JPanel main;
@@ -55,17 +50,17 @@ public class GUI extends JFrame {
     private String update = "";
     	
     public GUI() {
-    	frame = new JFrame("Versionen");
+    	this.frame = new JFrame("Versionen");
     	
-    	frame.setSize(1000,600);
-        frame.setTitle("Lade Daten");
+    	this.frame.setSize(1000,600);
+    	this.frame.setTitle("Lade Daten");
         
-        frame.setLocationRelativeTo(null); 
-        frame.invalidate();
-        frame.validate();
-        frame.repaint();
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	this.frame.setLocationRelativeTo(null); 
+    	this.frame.invalidate();
+    	this.frame.validate();
+    	this.frame.repaint();
+    	this.frame.setVisible(true);
+    	this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
     public void initComponents() {
@@ -75,58 +70,59 @@ public class GUI extends JFrame {
         JMenu menu = new JMenu("Menu"); 
         JMenu menuConfig = new JMenu("Config");
         JMenu menuDownloads = new JMenu("Downloads");
-        label = new JLabel(); 
-        area = new JTextArea();
-        lfButton = new JButton("Aktualisieren"); 
+        this.label = new JLabel(); 
+        this.area = new JTextArea();
+        this.lfButton = new JButton("Aktualisieren"); 
         
-        pathConfig = new JMenuItem("Config erstellen");
-        openConfig = new JMenuItem("Config öffnen");
-        pathDownloads = new JMenuItem("Downloads erstellen");
-        openDownloads = new JMenuItem("Downloads öffnen");
-        startDownloads = new JMenuItem("Download starten");
+        this.pathConfig = new JMenuItem("Config erstellen");
+        this.openConfig = new JMenuItem("Config öffnen");
+        this.pathDownloads = new JMenuItem("Downloads erstellen");
+        this.openDownloads = new JMenuItem("Downloads öffnen");
+        this.openDir = new JMenuItem("Ordner öffnen");
+        this.startDownloads = new JMenuItem("Download starten");
         
-        exit = new JMenuItem("Beenden");
+        this.exit = new JMenuItem("Beenden");
         JPanel buttPanel = new JPanel(new FlowLayout());
-        main = new JPanel(new BorderLayout());
+        this.main = new JPanel(new BorderLayout());
         
         
-        if(!update.isEmpty()) {
-        	frame.setTitle("CHIP-Versionen neu geladen am " + update + " Uhr");
+        if(!this.update.isEmpty()) {
+        	this.frame.setTitle("CHIP-Versionen neu geladen am " + update + " Uhr");
         } else {
-        	frame.setTitle("CHIP-Versionen geladen am " + getDate() + " Uhr");
+        	this.frame.setTitle("CHIP-Versionen geladen am " + Main.getDate() + " Uhr");
         }  
 
         
         
-        lfButton.addActionListener(new ActionListener() {
+        this.lfButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				updateClient();
 			}
 		}); 
         
-        area.setLineWrap(false);
-        area.setFont(content);
+        this.area.setLineWrap(false);
+        this.area.setFont(content);
         
         if(Main.configStatus == false) {
-        	area.insert("\r\nConfig wurde nicht gefunden! \r\nConfig --> Config erstellen und aktualisieren", i);
+        	this.area.insert("\r\nConfig wurde nicht gefunden! \r\nConfig --> Config erstellen und aktualisieren", i);
         } else {
             // Für jedes Chip Programm Name == P und Version == v
             Main.chipVersionen.forEach((p, v) -> {
             	// Wenn die Version in acmpVersion drinnen ist bedeutet es, dass es keine neue Version gibt
             	if(Main.acmpVersionen.containsValue(v)) {
-                    area.insert(" \r\n [" + String.valueOf(p) + "] ACMP-Version " + v + " stimmt mit Chip überein", i);
+            		this.area.insert(" \r\n [" + String.valueOf(p) + "] ACMP-Version " + v + " stimmt mit Chip überein", i);
                     i++;
             	} else {
                     Main.aktualisieren.put(String.valueOf(p), v);
             	}
             	
             });
-            area.insert("\r\n-------------------------------------------------------------------", i);            
+            this.area.insert("\r\n-------------------------------------------------------------------", i);            
             Main.chipVersionen.forEach((k,v)->{
             	if(Main.aktualisieren.containsValue(v)) {
             		String acmpVer =  Main.acmpVersionen.get(k);
-            		area.insert("\r\n [" + String.valueOf(k) + "] Versionen stimmen nicht überein ACMP-Version: " + acmpVer + " CHIP-Version: " + v, i);
+            		this.area.insert("\r\n [" + String.valueOf(k) + "] Versionen stimmen nicht überein ACMP-Version: " + acmpVer + " CHIP-Version: " + v, i);
             		i++;
             	}
             	
@@ -135,7 +131,7 @@ public class GUI extends JFrame {
         }
         
         
-        exit.addActionListener(new ActionListener() {
+        this.exit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new CloseFrame(frame);
@@ -143,14 +139,14 @@ public class GUI extends JFrame {
 		});
         
         
-        pathConfig.addActionListener(new ActionListener() {
+        this.pathConfig.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new CreateFile(Paths.get("C:\\ProgramData\\Chip Versionen\\config.ini"), "Config");
 			}
 		});
         
-        pathDownloads.addActionListener(new ActionListener() {
+        this.pathDownloads.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new CreateFile(Paths.get("C:\\ProgramData\\Chip Versionen\\downloads.ini"), "Downloads");
@@ -158,7 +154,7 @@ public class GUI extends JFrame {
 		});
         
         
-        openConfig.addActionListener(new ActionListener() {
+        this.openConfig.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ProcessBuilder pb = new ProcessBuilder("Notepad.exe", Main.pathConfig.toString());
@@ -170,7 +166,18 @@ public class GUI extends JFrame {
 			}
 		});
         
-        openDownloads.addActionListener(new ActionListener() {
+        this.openDir.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Desktop.getDesktop().open(new File(Main.pathDir.toString()));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+        
+        this.openDownloads.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ProcessBuilder pb = new ProcessBuilder("Notepad.exe", Main.pathDownloads.toString());
@@ -182,72 +189,64 @@ public class GUI extends JFrame {
 			}
 		});
         
-        startDownloads.addActionListener(new ActionListener() {
+        this.startDownloads.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				  Download d = new Download();
-				  d.downloadFile();
+				  downloadGUI d = new downloadGUI();
+				  d.downloadGUI();
 			}
 		});
         
 
-        pane = new JScrollPane(area); 
+        this.pane = new JScrollPane(area); 
         
-        menuConfig.add(openConfig);
-        menuConfig.add(pathConfig);
+        menuConfig.add(this.openConfig);
+        menuConfig.add(this.pathConfig);
         
         
         
         if(checkFileExists(Main.pathDownloads))
-        	menuDownloads.add(openDownloads);
-        menuDownloads.add(pathDownloads);
-        menuDownloads.add(startDownloads);
+        	menuDownloads.add(this.openDownloads);
+        menuDownloads.add(this.openDir);
+        menuDownloads.add(this.pathDownloads);
+        menuDownloads.add(this.startDownloads);
         
         
-        menu.add(exit); 
+        menu.add(this.exit); 
         
         menuBar.add(menu);
         menuBar.add(menuConfig); 
         menuBar.add(menuDownloads); 
          
-        buttPanel.add(lfButton); 
+        buttPanel.add(this.lfButton); 
 
          
-        main.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30)); 
+        this.main.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30)); 
 
-        main.add(label, BorderLayout.NORTH); 
-        main.add(pane, BorderLayout.CENTER); 
-        main.add(buttPanel, BorderLayout.SOUTH); 
+        this.main.add(this.label, BorderLayout.NORTH); 
+        this.main.add(this.pane, BorderLayout.CENTER); 
+        this.main.add(buttPanel, BorderLayout.SOUTH); 
         
         
-        frame.add(menuBar, BorderLayout.NORTH); 
-        frame.add(main, BorderLayout.CENTER);
-        frame.setLocationRelativeTo(null); 
-        frame.invalidate();
-        frame.validate();
-        frame.repaint();
+        this.frame.add(menuBar, BorderLayout.NORTH); 
+        this.frame.add(this.main, BorderLayout.CENTER);
+        this.frame.setLocationRelativeTo(null); 
+        this.frame.invalidate();
+        this.frame.validate();
+        this.frame.repaint();
         // Die Zeilen zurücksetzen
         i=0;
     } 
     
-    private String getDate() {
-	    DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"); 
-	    LocalDateTime myDateObj = LocalDateTime.now(); 
-	    String formattedDate = myDateObj.format(myFormatObj); 
-	    
-		return formattedDate;
-    }
-    
 
-    
     private void updateClient() {
 		new CloseFrame(frame);		
 		GUI x = new GUI();
 		new Load();
-		new Connect_acmp();
+		//new Connect_acmp();
 		new Versionen();
-		new Compare(Main.acmpVersionen, Main.chipVersionen);
+		//new Compare(Main.acmpVersionen, Main.chipVersionen);
 		System.out.println("[GUI] Neue Versionen werden geladen");
 		x.initComponents();
 		  

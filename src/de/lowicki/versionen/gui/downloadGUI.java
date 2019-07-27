@@ -13,10 +13,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import de.lowicki.versionen.download.Download;
 import de.lowicki.versionen.main.Main;
 import de.lowicki.versionen.main.State;
 
-public class StartGUI {
+public class downloadGUI {
 	
 	JFrame frame;
     private JTextArea area; 
@@ -24,25 +25,25 @@ public class StartGUI {
     
     private JPanel auswahl;
 	
-	public void StartGUI() {
+	public void downloadGUI() {
 		
-		if(!(Main.getState() == State.AUSWAHL)) {
-			Main.setState(State.AUSWAHL);
-			System.out.println("State zu AUSWAHL geändert");
+		if(!(Main.getState() == State.DOWNLOADING)) {
+			Main.setState(State.DOWNLOADING);
+			System.out.println("State zu Downloading geändert");
 		}
 		
-    	frame = new JFrame("Versionen");
+    	frame = new JFrame("Downloading");
     	
     	frame.setSize(500, 200);
-        frame.setTitle("Lade Daten");
+        frame.setTitle("Download starten");
 
         JPanel buttPanel = new JPanel(new FlowLayout());
         auswahl = new JPanel(new BorderLayout());
         Font content = new Font("Sans-Serif", Font.CENTER_BASELINE, 15);
 
         
-        JButton dbButton = new JButton("Datenbank");
-        JButton cfButton = new JButton("Config"); 
+        JButton dbButton = new JButton("Starten");
+        JButton cfButton = new JButton("Beenden"); 
         
         buttPanel.add(dbButton);
         buttPanel.add(cfButton); 
@@ -51,7 +52,9 @@ public class StartGUI {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				mysqlGUI m = new mysqlGUI();
+				add(Main.getDate() + " Download gestartet\r\n");
+				Download d = new Download();
+				d.downloadFile();
 			}
 		});
         
@@ -59,10 +62,9 @@ public class StartGUI {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(Main.configReady == true) {
-					GUI x = new GUI();
-					x.initComponents();
-					new CloseFrame(frame);
+				if(Main.downloadStop == false) {
+					Main.downloadStop = true;
+					add(Main.getDate() + " Download wird beendet\r\n");
 					Main.setState(State.MAIN);
 				}
 			}
@@ -72,7 +74,7 @@ public class StartGUI {
         area.setLineWrap(false);
         area.setFont(content);
         
-        area.insert("Lade Daten...\r\n", 0);
+        area.insert("Downloade Dateien \r\n", 0);
         
         pane = new JScrollPane(area); 
         auswahl.add(pane, BorderLayout.CENTER); 
@@ -85,12 +87,12 @@ public class StartGUI {
         frame.validate();
         frame.repaint();
         frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
+	}
 	
 	public void add(String str) {
 		area.insert(str, area.getText().length());
 		area.update(area.getGraphics());
 		
 	}
+
 }
