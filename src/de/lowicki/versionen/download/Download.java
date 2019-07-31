@@ -17,7 +17,7 @@ import de.lowicki.versionen.manager.BreakException;
 public class Download {
 	
 	public void downloadFile() {
-		createDir(Paths.get("C:\\Users\\David\\Desktop\\downloads"));
+		createDir(Paths.get(Main.pathDir.toString()));
 		new Thread(new Runnable() {
 			
 			@Override
@@ -25,9 +25,7 @@ public class Download {
 				try {
 					Main.downloads.forEach((k,v) -> {
 						
-						if(Main.downloadStop == true) {
-							throw new BreakException();
-						}
+						
 						
 						System.out.println("Starte download von " + Main.downloads.get(k));
 						
@@ -48,17 +46,19 @@ public class Download {
 						    	end = ".exe";
 						    }
 						    
-						    FileOutputStream fos = new FileOutputStream(new File("C:\\Users\\David\\Desktop\\downloads\\" + k + end));
+						    FileOutputStream fos = new FileOutputStream(new File(Main.pathDir.toString() + "\\" + k + end));
 			
 						    int length = -1;
-						    byte[] buffer = new byte[1024];// buffer for portion of data from
-						    // connection
+						    byte[] buffer = new byte[1024]; // buffer for portion of data from connection
 						    while ((length = in.read(buffer)) > -1) {
+						    	if(Main.downloadStop == true) {
+									throw new BreakException();
+								}
 						        fos.write(buffer, 0, length);
 						    }
 						    fos.close();
 						    in.close();
-						    System.out.println("Download beendet!");
+						    System.out.println("Download beendet! Datei befindet sich -> " + Main.pathDir.toString() + "\\" + k + end);
 						    TimeUnit.SECONDS.sleep(1);
 						} catch (IOException | InterruptedException e) {
 							e.printStackTrace();

@@ -20,7 +20,7 @@ public class Connect_acmp {
          String connectionURL = Main.connectionURL;
          conn = DriverManager.getConnection(connectionURL);
          if(conn != null){
-        	 System.out.println("[Connect] Verbindung zur Datenbank erfolgreich aufgebaut!");
+        	 System.out.println("[Connect ACMP] Verbindung zur Datenbank erfolgreich aufgebaut!");
          }
          
          for(int i = 0; i<versionen.length; i++) {

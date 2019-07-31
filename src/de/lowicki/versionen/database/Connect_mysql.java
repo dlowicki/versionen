@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 
 import de.lowicki.versionen.main.Main;
 
@@ -21,17 +22,36 @@ public class Connect_mysql {
 		try {
 			Class.forName("com.mysql.jdbc.Driver"); // Datenbanktreiber für JDBC Schnittstellen laden.
 			// Verbindung zur JDBC-Datenbank herstellen.
-			con = DriverManager.getConnection("jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbName + "?" + "user="
+			this.con = DriverManager.getConnection("jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbName + "?" + "user="
 					+ dbUser + "&" + "password=" + dbPass);
-			System.out.println("Verbindung erfolgreich");
+			System.out.println("[Connect MYSQL] Verbindung zur Datenbank erfolgreich aufgebaut!");
 		} catch (ClassNotFoundException e) {
-			System.out.println("Treiber nicht gefunden");
+			System.out.println("[Connect MYSQL] Treiber nicht gefunden");
 			e.printStackTrace();
 		} catch (SQLException e) {
-			System.out.println("Verbindung nicht moglich");
-			System.out.println("SQLException: " + e.getMessage());
-			System.out.println("SQLState: " + e.getSQLState());
-			System.out.println("VendorError: " + e.getErrorCode());
+			System.out.println("[Connect MYSQL] Verbindung nicht moglich");
+			System.out.println("[Connect MYSQL] SQLException: " + e.getMessage());
+			System.out.println("[Connect MYSQL] SQLState: " + e.getSQLState());
+			System.out.println("[Connect MYSQL] VendorError: " + e.getErrorCode());
+		}
+	}
+	
+	public void disconnect() {
+		try {
+			Class.forName("com.mysql.jdbc.Driver"); // Datenbanktreiber für JDBC Schnittstellen laden.
+			// Verbindung zur JDBC-Datenbank herstellen.
+			if(this.con != null) {
+				con.close();
+			}
+			System.out.println("[Connect MYSQL] Verbindung getrennt");
+		} catch (ClassNotFoundException e) {
+			System.out.println("[Connect MYSQL] Treiber nicht gefunden");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			System.out.println("[Connect MYSQL] Anfrage nicht möglich!");
+			System.out.println("[Connect MYSQL] SQLException: " + e.getMessage());
+			System.out.println("[Connect MYSQL] SQLState: " + e.getSQLState());
+			System.out.println("[Connect MYSQL] VendorError: " + e.getErrorCode());
 		}
 	}
 
@@ -72,13 +92,29 @@ public class Connect_mysql {
 		return false;
 	}
 	
-	private void createTable() {
-		this.update("CREATE TABLE IF NOT EXISTS programme(id int NOT NULL AUTO_INCREMENT, name varchar(50) UNIQUE, version varchar(30), link varchar(120), download varchar(250))");
+	public HashMap<String, String> getMysqlVersionen() {
+		ResultSet rs = query("SELECT name, version FROM programme");
+		HashMap<String, String> temp = new HashMap<String, String>();
+		try {
+			while(rs.next()) {
+				temp.put(rs.getString("name"), rs.getString("version"));
+			}
+			return temp;
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+		
 	}
 	
-	public void registerProgram(String name, String email, String pw) {
+	public void createTable() {
+		this.update("CREATE TABLE IF NOT EXISTS programme(id int NOT NULL AUTO_INCREMENT, name varchar(50) UNIQUE, version varchar(30), link varchar(120), download varchar(250), endung varchar(10), img varchar(255))");
+	}
+	
+	public void registerProgram(String name, String version, String link, String download, String endung, String img) {
 		if(getProgramDataByName(name) == false) {
-			update("INSERT INTO programme (name, link, img) VALUES ('" + name + "','" + email + "', '" + pw + "')");
+			update("INSERT INTO programme (name, version, link, download, endung, img) VALUES ('" + name + "','" + version +"','" + link + "', '" + download + "','" + endung + "','" + img +"')");
 			System.out.println(name + " wurde in die Datenbank eingetragen");
 			return;
 		}

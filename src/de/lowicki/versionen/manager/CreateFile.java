@@ -14,7 +14,7 @@ public class CreateFile {
 	    	  File f = new File(path.toString());
 	    	  
 	    	  if(f.exists()) {
-	    		  System.out.println("[CreateFile] " + name + " existiert bereits");
+	    		  System.out.println("[CreateConfig] " + name + " existiert bereits");
 	    		  return;
 	    	  }
 	    	  
@@ -29,7 +29,7 @@ public class CreateFile {
 
 		        
 		        System.out.println("[existsFile] Es wurde keine Datei gefunden - Datei wird erstellt");
-		    	new Load();    	
+		    	new Load("config");    	
 		      } catch (java.io.IOException e) {
 		        e.printStackTrace();
 		      }
@@ -61,15 +61,15 @@ public class CreateFile {
 						+ "\r\n"
 						+ "[download]\r\n"
 						+ "CCleaner=https://download.ccleaner.com/ccsetup560.exe\r\n"
-						+ "7-Zip=https://www.chip.de/downloads/7-Zip-64-Bit_38851222.html\r\n"
-						+ "Notepad++=https://www.chip.de/downloads/Notepad_12996935.html\r\n"
+						+ "7-Zip=https://www.chip.de/downloads/c1_downloads_auswahl_38851231.html?t=1564131477&v=3600&s=c1dbdfe4ff042d228be5c9ddea93f255\r\n"
+						+ "Notepad++=https://notepad-plus-plus.org/repository/7.x/7.7.1/npp.7.7.1.bin.x64.zip\r\n"
 						+ "IrfanView=https://get.load-balance.net/?ZhokgJcAEdgl3GR1oTHQlf31p\r\n"
 						+ "VLC Media Player=https://ftp.fau.de/videolan/vlc/3.0.7.1/win64/vlc-3.0.7.1-win64.exe\r\n"
 						+ "Adobe Acrobat Reader DC=ftp://ftp.adobe.com/pub/adobe/reader/win/AcrobatDC/1901220034/AcroRdrDC1901220034_de_DE.exe\r\n"
 						+ "Adobe Flash Player ActiveX=https://fpdownload.macromedia.com/get/flashplayer/distyfp/current/win/install_flash_player_32_active_x.msi\r\n"
 						+ "Adobe Flash Player NPAPI=https://fpdownload.macromedia.com/get/flashplayer/distyfp/current/win/install_flash_player_32_plugin.msi\r\n"
 						+ "Adobe Flash Player PPAPI=https://fpdownload.macromedia.com/get/flashplayer/distyfp/current/win/install_flash_player_32_ppapi.msi\r\n"
-						+ "PDF24=https://www.chip.de/downloads/PDF24-Creator_43805654.html");
+						+ "PDF24=https://www.chip.de/downloads/c1_downloads_auswahl_43805656.html?t=1564134167&v=3600&s=b0440f0b24e316f996ebf4d94f8322f8");
 				w.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

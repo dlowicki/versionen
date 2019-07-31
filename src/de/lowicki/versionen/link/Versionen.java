@@ -8,7 +8,6 @@ import java.net.URL;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import de.lowicki.versionen.gui.StartGUI;
 import de.lowicki.versionen.main.Main;
 
 public class Versionen {
@@ -26,7 +25,8 @@ public class Versionen {
                 e.printStackTrace();
             }
         });
-        System.out.println("Gespeichert wurde: " + Main.chipVersionen);
+        // Hier die gespeicherten Daten von Chip.de
+        //System.out.println("Gespeichert wurde: " + Main.chipVersionen);
         Main.configReady = true;
     }
 
